@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { BaseController } from "../common/base.controller";
-import { LoggerService } from "../logger/loger.service";
+import { LoggerService } from "../logger/logger.service";
 
 export class UsersController extends BaseController {
   constructor(logger: LoggerService) {
