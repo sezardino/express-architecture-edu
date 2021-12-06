@@ -9,7 +9,7 @@ import { HTTPError } from './http-error.class';
 export class ExceptionFilter implements IExceptionFilter {
   constructor(@inject(TYPES.ILogger) private logger: LoggerService) {}
 
-  catch(err: Error | HTTPError, req: Request, res: Response, next: NextFunction) {
+  catch(err: Error | HTTPError, req: Request, res: Response, next: NextFunction): void {
     if (err instanceof HTTPError) {
       this.logger.error(`[${err.context}] Error ${err.statusCode}: ${err.context}`);
       res.status(err.statusCode).send({ err: err.message });

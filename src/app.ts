@@ -23,15 +23,15 @@ export class App {
     this.port = 8000;
   }
 
-  private useRoutes() {
+  private useRoutes(): void {
     this.app.use('/users', this.usersController.router);
   }
 
-  private useExceptions() {
+  private useExceptions(): void {
     this.app.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
   }
 
-  public init() {
+  public init(): void {
     this.useRoutes();
     this.useExceptions();
     this.server = this.app.listen(this.port);

@@ -17,11 +17,11 @@ export class UsersController extends BaseController implements IUsersController 
     ]);
   }
 
-  login(req: Request, res: Response, next: NextFunction) {
+  login(req: Request, res: Response, next: NextFunction): void {
     res.status(200).send('login');
   }
 
-  register(req: Request, res: Response, next: NextFunction) {
+  register(req: Request, res: Response, next: NextFunction): void {
     res.status(200).send('register');
   }
 }
