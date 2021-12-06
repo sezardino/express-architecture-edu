@@ -1,12 +1,12 @@
-import { inject, injectable } from "inversify";
-import express, { Express } from "express";
-import { Server } from "http";
-import "reflect-metadata";
+import { inject, injectable } from 'inversify';
+import express, { Express } from 'express';
+import { Server } from 'http';
+import 'reflect-metadata';
 
-import { IExceptionFilter } from "./errors/exception.filter.interface";
-import { ILogger } from "./logger/logger.interface";
-import { TYPES } from "./types";
-import { UsersController } from "./users/users.controller";
+import { IExceptionFilter } from './errors/exception.filter.interface';
+import { ILogger } from './logger/logger.interface';
+import { TYPES } from './types';
+import { UsersController } from './users/users.controller';
 
 @injectable()
 export class App {
@@ -17,14 +17,14 @@ export class App {
   constructor(
     @inject(TYPES.ILogger) private logger: ILogger,
     @inject(TYPES.IUsersController) private usersController: UsersController,
-    @inject(TYPES.IExceptionFilter) private exceptionFilter: IExceptionFilter
+    @inject(TYPES.IExceptionFilter) private exceptionFilter: IExceptionFilter,
   ) {
     this.app = express();
     this.port = 8000;
   }
 
   private useRoutes() {
-    this.app.use("/users", this.usersController.router);
+    this.app.use('/users', this.usersController.router);
   }
 
   private useExceptions() {

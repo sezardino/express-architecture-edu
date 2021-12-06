@@ -1,8 +1,8 @@
-import { injectable } from "inversify";
-import { Logger } from "tslog";
-import 'reflect-metadata'
+import { injectable } from 'inversify';
+import { Logger } from 'tslog';
+import 'reflect-metadata';
 
-import { ILogger } from "./logger.interface";
+import { ILogger } from './logger.interface';
 
 @injectable()
 export class LoggerService implements ILogger {
@@ -12,7 +12,7 @@ export class LoggerService implements ILogger {
     this.logger = new Logger({
       displayInstanceName: false,
       displayLoggerName: false,
-      displayFilePath: "hidden",
+      displayFilePath: 'hidden',
       displayFunctionName: false,
     });
   }
