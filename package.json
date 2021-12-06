@@ -5,6 +5,9 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
+    "prepare": "husky install",
+    "lint": "eslint ./src/**",
+    "lint:fix": "eslint ./src/** --fix",
     "start": "node dist/main.js",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,7 +16,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "husky": "^7.0.4",
     "inversify": "^6.0.1",
+    "lint-staged": "^12.1.2",
     "reflect-metadata": "^0.1.13",
     "tslog": "^3.3.0"
   },
@@ -27,5 +32,8 @@
     "eslint-typescript": "^1.1.0",
     "prettier": "^2.5.1",
     "typescript": "^4.5.2"
+  },
+  "lint-staged": {
+    "{.ts}": "lint:fix"
   }
 }
