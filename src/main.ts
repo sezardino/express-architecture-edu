@@ -8,6 +8,9 @@ import { LoggerService } from './logger/logger.service';
 import { UsersController } from './users/users.controller';
 import { TYPES } from './types';
 import { ILogger } from './logger/logger.interface';
+import { IUserService } from './users/user.service.interface';
+import { UserService } from './users/user.service';
+import { IUsersController } from './users/users.controller.interface';
 
 export interface IBootstrapReturn {
   appContainer: Container;
@@ -17,7 +20,8 @@ export interface IBootstrapReturn {
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<ILogger>(TYPES.ILogger).to(LoggerService);
   bind<IExceptionFilter>(TYPES.IExceptionFilter).to(ExceptionFilter);
-  bind<UsersController>(TYPES.IUsersController).to(UsersController);
+  bind<IUsersController>(TYPES.IUsersController).to(UsersController);
+  bind<IUserService>(TYPES.IUserService).to(UserService);
   bind<App>(TYPES.Application).to(App);
 });
 
