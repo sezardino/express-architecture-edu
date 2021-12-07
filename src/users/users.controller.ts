@@ -8,6 +8,7 @@ import { TYPES } from '../types';
 import { IUsersController } from './users.controller.interface';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
+import { User } from './user.entity';
 
 @injectable()
 export class UsersController extends BaseController implements IUsersController {
@@ -24,8 +25,13 @@ export class UsersController extends BaseController implements IUsersController 
     res.status(200).send('login');
   }
 
-  register(req: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): void {
-    console.log(req.body);
-    res.status(200).send('register');
+  async register(
+    { body }: Request<{}, {}, UserRegisterDto>,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const user = new User(body.email, body.name);
+    await user.setPassword(body.password);
+    res.status(200).send(user);
   }
 }
