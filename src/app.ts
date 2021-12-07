@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import express, { Express } from 'express';
 import { Server } from 'http';
+import { json } from 'body-parser';
 import 'reflect-metadata';
 
 import { IExceptionFilter } from './errors/exception.filter.interface';
@@ -23,6 +24,10 @@ export class App {
     this.port = 8000;
   }
 
+  private useMiddleware(): void {
+    this.app.use(json());
+  }
+
   private useRoutes(): void {
     this.app.use('/users', this.usersController.router);
   }
@@ -32,6 +37,7 @@ export class App {
   }
 
   public init(): void {
+    this.useMiddleware();
     this.useRoutes();
     this.useExceptions();
     this.server = this.app.listen(this.port);
