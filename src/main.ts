@@ -1,3 +1,4 @@
+import { IConfigService } from './config/config.interface';
 import { Container, ContainerModule, interfaces } from 'inversify';
 import 'reflect-metadata';
 
@@ -11,6 +12,7 @@ import { ILogger } from './logger/logger.interface';
 import { IUserService } from './users/user.service.interface';
 import { UserService } from './users/user.service';
 import { IUsersController } from './users/users.controller.interface';
+import { ConfigService } from './config/config.service';
 
 export interface IBootstrapReturn {
   appContainer: Container;
@@ -18,10 +20,11 @@ export interface IBootstrapReturn {
 }
 
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
-  bind<ILogger>(TYPES.ILogger).to(LoggerService);
+  bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
   bind<IExceptionFilter>(TYPES.IExceptionFilter).to(ExceptionFilter);
   bind<IUsersController>(TYPES.IUsersController).to(UsersController);
   bind<IUserService>(TYPES.IUserService).to(UserService);
+  bind<IConfigService>(TYPES.IConfigService).to(ConfigService).inSingletonScope();
   bind<App>(TYPES.Application).to(App);
 });
 

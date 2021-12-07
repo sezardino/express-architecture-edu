@@ -1,3 +1,4 @@
+import { IConfigService } from './config/config.interface';
 import { inject, injectable } from 'inversify';
 import express, { Express } from 'express';
 import { Server } from 'http';
@@ -19,6 +20,7 @@ export class App {
     @inject(TYPES.ILogger) private logger: ILogger,
     @inject(TYPES.IUsersController) private usersController: UsersController,
     @inject(TYPES.IExceptionFilter) private exceptionFilter: IExceptionFilter,
+    @inject(TYPES.IConfigService) private configService: IConfigService,
   ) {
     this.app = express();
     this.port = 8000;
