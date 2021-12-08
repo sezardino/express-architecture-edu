@@ -35,7 +35,29 @@ export class UsersController extends BaseController implements IUsersController 
         func: this.register,
         middlewares: [new ValidateMiddleware(UserRegisterDto)],
       },
+      {
+        path: '/info',
+        method: 'get',
+        func: this.info,
+        middlewares: [],
+      },
     ]);
+  }
+
+  private sign(email: string, secret: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      sign(
+        { email, iat: Math.floor(Date.now() / 1000) },
+        secret,
+        { algorithm: 'HS256' },
+        (error, token) => {
+          if (error) {
+            reject(error);
+          }
+          resolve(token as string);
+        },
+      );
+    });
   }
 
   async login(
@@ -72,19 +94,7 @@ export class UsersController extends BaseController implements IUsersController 
     res.status(200).send({ result });
   }
 
-  private sign(email: string, secret: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      sign(
-        { email, iat: Math.floor(Date.now() / 1000) },
-        secret,
-        { algorithm: 'HS256' },
-        (error, token) => {
-          if (error) {
-            reject(error);
-          }
-          resolve(token as string);
-        },
-      );
-    });
+  async info({ user }: Request, res: Response, next: NextFunction): Promise<void> {
+    res.status(200).send({ email: user });
   }
 }
