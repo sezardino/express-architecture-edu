@@ -1,8 +1,9 @@
-import { ValidateMiddleware } from './../common/validate.middleware';
 import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
+import { sign } from 'jsonwebtoken';
 import 'reflect-metadata';
 
+import { ValidateMiddleware } from '../common/validate.middleware';
 import { ILogger } from '../logger/logger.interface';
 import { BaseController } from '../common/base.controller';
 import { TYPES } from '../types';
@@ -11,12 +12,14 @@ import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
 import { IUserService } from './user.service.interface';
 import { HTTPError } from '../errors/http-error.class';
+import { IConfigService } from '../config/config.interface';
 
 @injectable()
 export class UsersController extends BaseController implements IUsersController {
   constructor(
     @inject(TYPES.ILogger) loggerService: ILogger,
     @inject(TYPES.IUserService) private userService: IUserService,
+    @inject(TYPES.IConfigService) private configService: IConfigService,
   ) {
     super(loggerService);
     this.bindRoutes([
@@ -50,7 +53,9 @@ export class UsersController extends BaseController implements IUsersController 
       return next(new HTTPError(422, 'Incorrect data'));
     }
 
-    res.status(200).send('logged correctly');
+    const token = await this.sign(result.email, this.configService.get('JWT_SECRET'));
+
+    res.status(200).send({ token });
   }
 
   async register(
@@ -65,5 +70,21 @@ export class UsersController extends BaseController implements IUsersController 
     }
 
     res.status(200).send({ result });
+  }
+
+  private sign(email: string, secret: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      sign(
+        { email, iat: Math.floor(Date.now() / 1000) },
+        secret,
+        { algorithm: 'HS256' },
+        (error, token) => {
+          if (error) {
+            reject(error);
+          }
+          resolve(token as string);
+        },
+      );
+    });
   }
 }
