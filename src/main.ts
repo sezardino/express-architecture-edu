@@ -1,3 +1,4 @@
+import { PrismaService } from './database/prisma.service';
 import { IConfigService } from './config/config.interface';
 import { Container, ContainerModule, interfaces } from 'inversify';
 import 'reflect-metadata';
@@ -25,6 +26,7 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<IUsersController>(TYPES.IUsersController).to(UsersController);
   bind<IUserService>(TYPES.IUserService).to(UserService);
   bind<IConfigService>(TYPES.IConfigService).to(ConfigService).inSingletonScope();
+  bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
   bind<App>(TYPES.Application).to(App);
 });
 
