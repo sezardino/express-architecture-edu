@@ -7,7 +7,7 @@ import { TYPES } from '../types';
 
 @injectable()
 export class PrismaService {
-  private client: PrismaClient;
+  client: PrismaClient;
 
   constructor(@inject(TYPES.ILogger) private logger: ILogger) {
     this.client = new PrismaClient();

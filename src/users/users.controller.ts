@@ -47,6 +47,6 @@ export class UsersController extends BaseController implements IUsersController 
       return next(new HTTPError(422, 'User already exist'));
     }
 
-    res.status(200).send({ email: result.email });
+    res.status(200).send({ result });
   }
 }
