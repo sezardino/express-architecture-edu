@@ -9,7 +9,6 @@ import { TYPES } from '../types';
 import { IUsersController } from './users.controller.interface';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
-import { User } from './user.entity';
 import { IUserService } from './user.service.interface';
 import { HTTPError } from '../errors/http-error.class';
 
@@ -21,7 +20,12 @@ export class UsersController extends BaseController implements IUsersController 
   ) {
     super(loggerService);
     this.bindRoutes([
-      { path: '/login', method: 'post', func: this.login },
+      {
+        path: '/login',
+        method: 'post',
+        func: this.login,
+        middlewares: [new ValidateMiddleware(UserRegisterDto)],
+      },
       {
         path: '/register',
         method: 'post',
@@ -31,9 +35,22 @@ export class UsersController extends BaseController implements IUsersController 
     ]);
   }
 
-  login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
-    console.log(req.body);
-    res.status(200).send('login');
+  async login(
+    { body }: Request<{}, {}, UserLoginDto>,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const result = await this.userService.validateUser(body);
+
+    if (typeof result === 'boolean') {
+      return next(new HTTPError(422, 'Password mismatch'));
+    }
+
+    if (!result) {
+      return next(new HTTPError(422, 'Incorrect data'));
+    }
+
+    res.status(200).send('logged correctly');
   }
 
   async register(
