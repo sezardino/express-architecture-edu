@@ -1,3 +1,4 @@
+import { RouteGuardMiddleware } from './../common/routeGuard.middleware';
 import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { sign } from 'jsonwebtoken';
@@ -39,7 +40,7 @@ export class UsersController extends BaseController implements IUsersController 
         path: '/info',
         method: 'get',
         func: this.info,
-        middlewares: [],
+        middlewares: [new RouteGuardMiddleware()],
       },
     ]);
   }
@@ -95,6 +96,7 @@ export class UsersController extends BaseController implements IUsersController 
   }
 
   async info({ user }: Request, res: Response, next: NextFunction): Promise<void> {
-    res.status(200).send({ email: user });
+    const neededUser = await this.userService.getUser(user);
+    res.status(200).send({ email: neededUser?.email, id: neededUser?.id });
   }
 }
