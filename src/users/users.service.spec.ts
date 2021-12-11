@@ -58,10 +58,43 @@ describe('[UserService] Create user', () => {
   });
 
   it("Don't create new user, if founded in db", async () => {
-    usersRepository.find = jest.fn().mockReturnValue(true);
+    usersRepository.find = jest.fn().mockReturnValueOnce(true);
 
     const createdUser = await usersService.createUser(userMock);
 
     expect(createdUser).toBeNull();
+  });
+});
+
+describe('[UsersService] Validate user', () => {
+  it('Return null when find user in db', async () => {
+    usersRepository.find = jest.fn().mockReturnValueOnce(false);
+
+    const userValidation = await usersService.validateUser(userMock);
+
+    expect(userValidation).toBeNull();
+  });
+
+  it('Return false, when password not match', async () => {
+    const user = new User(userMock.name, userMock.email);
+    await user.setPassword(userMock.password);
+    usersRepository.find = jest.fn().mockReturnValueOnce(user);
+
+    const userValidation = await usersService.validateUser({
+      email: userMock.email,
+      password: notPasswordMock,
+    });
+
+    expect(userValidation).toBeFalsy();
+  });
+
+  it('Return user, when everything is ok', async () => {
+    const user = new User(userMock.name, userMock.email);
+    await user.setPassword(userMock.password);
+    usersRepository.find = jest.fn().mockReturnValueOnce(user);
+
+    const returnedUser = await usersService.validateUser(userMock);
+
+    expect(returnedUser).toEqual(user);
   });
 });
