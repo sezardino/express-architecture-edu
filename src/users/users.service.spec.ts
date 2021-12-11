@@ -20,7 +20,6 @@ const UsersRepositoryMock: IUsersRepository = {
 const passwordMock = '1';
 const idMock = 1;
 const notPasswordMock = '2';
-const saltMock = '1';
 const userMock = {
   email: 'test@mail.com',
   name: 'name',
@@ -96,5 +95,17 @@ describe('[UsersService] Validate user', () => {
     const returnedUser = await usersService.validateUser(userMock);
 
     expect(returnedUser).toEqual(user);
+  });
+
+  describe('[UsersService] get user', () => {
+    it('return user', async () => {
+      const user = new User(userMock.name, userMock.email);
+      await user.setPassword(userMock.password);
+      usersRepository.find = jest.fn().mockReturnValueOnce(user);
+
+      const returnedUser = await usersService.getUser(userMock.email);
+
+      expect(returnedUser).toEqual(user);
+    });
   });
 });
