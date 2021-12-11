@@ -42,8 +42,8 @@ beforeAll(() => {
   usersService = container.get<IUserService>(TYPES.IUserService);
 });
 
-describe('User service', () => {
-  it('Create User', async () => {
+describe('[UserService] Create user', () => {
+  it('Create User when can create', async () => {
     usersRepository.create = jest.fn().mockImplementationOnce((user: UserModel) => ({
       name: user.name,
       email: user.email,
@@ -55,5 +55,13 @@ describe('User service', () => {
 
     expect(createdUser?.id).toEqual(idMock);
     expect(createdUser?.password).not.toEqual(passwordMock);
+  });
+
+  it("Don't create new user, if founded in db", async () => {
+    usersRepository.find = jest.fn().mockReturnValue(true);
+
+    const createdUser = await usersService.createUser(userMock);
+
+    expect(createdUser).toBeNull();
   });
 });
